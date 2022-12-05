@@ -21,6 +21,7 @@ dependencies = ["openassetio>=1.0.0a6"]
 
 [tool.setuptools]
 packages = ["openassetio_mediacreation"]
+include_package_data=True
 
 [project.urls]
 Source = "https://github.com/OpenAssetIO/OpenAssetIO-MediaCreation"
