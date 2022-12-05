@@ -11,6 +11,7 @@ Test the package is generated as we expect
 
 import site
 from pathlib import Path
+import os
 import pytest
 
 
@@ -26,6 +27,12 @@ class Test_packaging:
         package_dir = Path(site_packages_dir) / "openassetio_mediacreation"
 
         assert package_dir.exists()
+
+        files = os.listdir(package_dir)
+
+        # Print the files
+        for file in files:
+            print(file)
 
         # Check if the traits.yml file exists in the package directory
         traits_file = package_dir / "traits.yml"
