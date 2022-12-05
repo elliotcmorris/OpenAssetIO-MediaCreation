@@ -30,4 +30,5 @@ setup(
     cmdclass={
         "build_py": GenerateThenBuild,
     },
+    include_package_data=True,
 )
