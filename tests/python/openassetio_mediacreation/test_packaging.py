@@ -25,6 +25,8 @@ class Test_packaging:
         # Build path to the openassetio-mediacreation package directory
         package_dir = Path(site_packages_dir) / "openassetio_mediacreation"
 
+        assert package_dir.exists()
+
         # Check if the traits.yml file exists in the package directory
         traits_file = package_dir / "traits.yml"
         assert traits_file.exists()
