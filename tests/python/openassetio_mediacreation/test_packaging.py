@@ -9,8 +9,6 @@ Test the package is generated as we expect
 # pylint: disable=unused-import,import-outside-toplevel
 # pylint: disable=missing-class-docstring,missing-function-docstring
 
-import site
-from pathlib import Path
 import os
 import pytest
 
@@ -20,20 +18,9 @@ class Test_packaging:
         # Verify the package is installed
         import openassetio_mediacreation
 
-        # Find the site-packages directory for the current interpreter
-        site_packages_dir = site.getsitepackages()[0]
+        # Find traits file in the mediacreation install
+        traits_file = os.path.join(
+            os.path.dirname(openassetio_mediacreation.__file__), "traits.yml"
+        )
 
-        # Build path to the openassetio-mediacreation package directory
-        package_dir = Path(site_packages_dir) / "openassetio_mediacreation"
-
-        assert package_dir.exists()
-
-        files = os.listdir(package_dir)
-
-        # Print the files
-        for file in files:
-            print(file)
-
-        # Check if the traits.yml file exists in the package directory
-        traits_file = package_dir / "traits.yml"
-        assert traits_file.exists()
+        assert os.path.exists(traits_file)
