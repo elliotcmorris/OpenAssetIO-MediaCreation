@@ -2,8 +2,6 @@
 # Copyright 2013-2022 The Foundry Visionmongers Ltd
 from distutils.command.build_py import build_py
 import logging
-import os
-from shutil import copyfile
 from setuptools import setup
 
 import openassetio_traitgen
@@ -23,11 +21,6 @@ class GenerateThenBuild(build_py):
             logging.Logger("openassetio-mediacreation-traitgen"),
             False,
             None,
-        )
-
-        # Move the source trait yaml to the package directory.
-        copyfile(
-            "traits.yml", os.path.join(self.build_lib, "openassetio_mediacreation", "traits.yml")
         )
 
         build_py.run(self)
