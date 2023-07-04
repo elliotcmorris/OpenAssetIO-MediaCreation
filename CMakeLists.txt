@@ -14,7 +14,18 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 #-----------------------------------------------------------------------
 # Options
 option(OPENASSETIO_MEDIACREATION_ENABLE_TEST "Run test on mediacreation traits" OFF)
+option(OPENASSETIO_MEDIACREATION_GENERATE_PYTHON "Aditionally generate python library" OFF)
+if (OPENASSETIO_MEDIACREATION_GENERATE_PYTHON)
+    # By default we'll compute the correct site-packages directory
+    # structure, but allow overriding.
+    set(OPENASSETIO_MEDIACREATION_PYTHON_SITEDIR
+        ""
+        CACHE STRING
+        "Override default Python module install directory, relative to CMAKE_INSTALL_PREFIX")
+endif ()
+
 message(STATUS "Test enabled = ${OPENASSETIO_MEDIACREATION_ENABLE_TEST}")
+message(STATUS "Generate python library = ${OPENASSETIO_MEDIACREATION_GENERATE_PYTHON}")
 
 # ABI wrangling only needed for test
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
@@ -65,6 +76,13 @@ execute_process(COMMAND openassetio-traitgen ${PROJECT_BINARY_DIR}/traits.yml
                 COMMAND_ERROR_IS_FATAL ANY
                 COMMAND_ECHO STDERR)
 
+if (OPENASSETIO_MEDIACREATION_GENERATE_PYTHON)
+    execute_process(COMMAND openassetio-traitgen ${PROJECT_BINARY_DIR}/traits.yml
+    -o ${PROJECT_BINARY_DIR}/package -g python
+    COMMAND_ERROR_IS_FATAL ANY
+    COMMAND_ECHO STDERR)
+endif()
+
 add_library(openassetio-mediacreation INTERFACE)
 # add alias so the project can be used with add_subdirectory
 add_library(OpenAssetIO-MediaCreation::openassetio-mediacreation ALIAS openassetio-mediacreation)
@@ -111,6 +129,18 @@ install(
     NAMESPACE ${PROJECT_NAME}::
     FILE ${PROJECT_NAME}Targets.cmake
 )
+
+#-----------------------------------------------------------------------
+# Optionally install python library
+if (OPENASSETIO_MEDIACREATION_GENERATE_PYTHON)
+    include(ThirdParty)
+
+    install(
+        DIRECTORY ${PROJECT_BINARY_DIR}/package/openassetio_mediacreation
+        DESTINATION "${OPENASSETIO_MEDIACREATION_PYTHON_SITEDIR}"
+        FILES_MATCHING PATTERN "*.py"
+    )
+endif()
 
 #-----------------------------------------------------------------------
 # Copy CMake Files
